@@ -1,0 +1,143 @@
+/******************************************************************************************
+Apex Class         : AccountsContractController
+Created Date       : Aug , 2025
+@Description       : update contract fields with account and opportunity fields
+@Author            : pradeep baddity 
+User Story         : 156879 161439
+********************************************************************************************/
+public with sharing class AccountsContractController {
+    @AuraEnabled(cacheable=true)
+    public static List<Contract> getExistingContracts(Id recordId) {
+        System.debug('Existing Contracts');
+        String sObjName = recordId.getSObjectType().getDescribe().getName();
+        List<Contract> contracts = new List<Contract>();
+        if (sObjName == 'Account') {
+            contracts = [
+                SELECT Id, Name, Document_Type__c, StartDate, ContractTerm, EndDate,Disposition__c,Assignment_Group__c
+                FROM Contract
+                WHERE AccountId = :recordId
+                AND Document_Type__c IN ('Non-Disclosure Agreement (NDA)', 'Professional Services Agreement (PSA)','Huron Managed Services (HMS) MSA','Engagement Letter (EL)','Statement of Work (SOW)','Software as a Service Agreement (SaaS)','Business Associate Agreement (BAA)','Teaming Agreement','Amendments','Others')
+                AND RecordType.Name IN ('Huron Contract')
+            ];
+        } else if (sObjName == 'Opportunity') {
+            contracts = [
+                SELECT Id, Name, Document_Type__c, StartDate, ContractTerm, EndDate, Disposition__c,Assignment_Group__c
+                FROM Contract
+                WHERE Opportunity__c = :recordId
+                AND Document_Type__c IN ('Non-Disclosure Agreement (NDA)', 'Professional Services Agreement (PSA)','Huron Managed Services (HMS) MSA','Engagement Letter (EL)','Statement of Work (SOW)','Software as a Service Agreement (SaaS)','Business Associate Agreement (BAA)','Teaming Agreement','Amendments','Others')
+                AND RecordType.Name IN ('Huron Contract')
+            ];
+        }
+        
+        return contracts;
+    }
+    
+        @AuraEnabled(cacheable=false)
+    public static ID createAccountsContract(Id AccountID,String DocumentType)
+    {
+        List<Account> accountList =[select id,name,Industry,Industry_Sub_Market__c,Account_Lead__c,CurrencyIsoCode from Account where id =:AccountId];
+         if (accountList.isEmpty()) {
+            throw new AuraHandledException('Account not found.');
+        }
+        else
+        {
+        string indAndSubInd=accountList[0].Industry+accountList[0].Industry_Sub_Market__c;
+        List<Opportunity_Mapping__c> oppMapList=[SELECT Industry__c,Name_Key_Value__c,Industry_Sub_Market__c,
+                                             Operating_Industry__c,Operating_Segment__c
+                                             FROM  Opportunity_Mapping__c where Name_Key_Value__c= :indAndSubInd limit 1];
+        Contract cont = new Contract();
+        string contractName=DocumentType + ' '+accountList[0].name;
+            if(contractName.length() > 80){
+                contractName=DocumentType+ ' '+	accountList[0].name.substring(0, 80 - (DocumentType.length() + 1));
+            }
+        cont.name=contractName;
+        cont.AccountId = AccountID;
+        cont.Counter_Party_ID__c = AccountID;
+        cont.Counter_Party_Name_lookup__c =AccountID;
+        cont.Huron_Signer__c = accountList[0].Account_Lead__c ;
+        cont.Document_Type__c = DocumentType;
+        cont.CurrencyIsoCode =accountList[0].CurrencyIsoCode;
+        cont.StartDate = System.Today().addDays(14);
+        cont.ContractTerm = 12;
+        cont.Status='Draft';
+        cont.Disposition__c = 'Draft';
+        cont.Contract_Industry__c = accountList[0].Industry;
+        cont.Contract_Industry_Sub_Market__c = accountList[0].Industry_Sub_Market__c;
+        if(!oppMapList.isEmpty()){
+             cont.Contract_Operating_Industry__c=oppMapList[0].Operating_Industry__c;
+        }   
+        try
+        {
+           insert cont;
+        }
+        catch(Exception e)
+        {
+             insert new Error_Log__c(Apex_Class_Name__c='create_AccountsContractController',Source_System__c='Salesforce' ,Message__c=e.getMessage());
+                   
+        }
+              return cont.id;
+        }
+       
+    }
+   @AuraEnabled(cacheable=false)
+    public static ID createOpportunityContract(Id AccountId,Id OpportunityID,String DocumentType)
+    {
+        List<Account> accountList =[select id,name from Account where id =:AccountId];
+        Opportunity   opportunity=   [select id,name,MD_of_Record__c,amount,CurrencyIsoCode,Estimated_Start_Date__c,Estimated_Duration__c,Industry__c,OwnerId,Huron_Entity__c,Industry_Sub_Market__c,Operating_Industry__c   from opportunity where id =:OpportunityID limit 1];
+            
+        if (accountList.isEmpty() || opportunity==null)
+         {
+            throw new AuraHandledException('Account/Opportunity not found.');
+         }
+         else
+        {
+        Contract cont = new Contract();
+        cont.AccountId = AccountId;
+         string contractName=DocumentType + ' '+accountList[0].name;
+            if(contractName.length() > 80){
+                contractName=DocumentType+ ' '+	accountList[0].name.substring(0, 80 - (DocumentType.length() + 1));
+            }
+        cont.name=contractName;
+        cont.Counter_Party_ID__c = AccountID;
+        cont.Counter_Party_Name_lookup__c = AccountID;
+        cont.Opportunity__c = OpportunityID;
+        cont.Document_Type__c = DocumentType;
+        cont.Huron_Signer__c = opportunity.MD_of_Record__c;
+        cont.StartDate = opportunity.Estimated_Start_Date__c;
+        cont.ContractTerm = Integer.valueOf(opportunity.Estimated_Duration__c);
+        cont.Contract_amount__c =opportunity.Amount;
+        cont.CurrencyIsoCode =opportunity.CurrencyIsoCode;
+        cont.Status='Draft';
+        cont.Contract_Industry__c = opportunity.Industry__c;
+        //cont.OwnerId = opportunity.OwnerId;
+        cont.Huron_Entity__c = opportunity.Huron_Entity__c;
+        cont.Disposition__c = 'Draft';
+        cont.Contract_Industry_Sub_Market__c = opportunity.Industry_Sub_Market__c; 
+        cont.Contract_Operating_Industry__c=opportunity.Operating_Industry__c;
+        try
+        {
+           insert cont;
+           if(cont!=null)
+           {
+         
+             Opportunity oppToUpdate = [SELECT Id, Contract_Created__c 
+                               FROM Opportunity 
+                               WHERE Id = :OpportunityID 
+                               LIMIT 1];
+               if (oppToUpdate != null ) {
+               oppToUpdate.Contract_Created__c = true;
+               update oppToUpdate;
+               }
+           }
+        }
+        catch(Exception e)
+        {
+             insert new Error_Log__c(Apex_Class_Name__c='create_AccountsContractController',Source_System__c='Salesforce' ,Message__c=e.getMessage());
+              throw new AuraHandledException('A DML exception occurred: ' + e.getMessage());                   
+        }
+            return cont.id;
+        }
+        
+    }
+  
+}

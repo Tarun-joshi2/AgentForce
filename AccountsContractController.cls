@@ -49,23 +49,8 @@ public with sharing class AccountsContractController {
         string contractName=DocumentType + ' '+accountList[0].name;
             if(contractName.length() > 80){
                 contractName=DocumentType+ ' '+	accountList[0].name.substring(0, 80 - (DocumentType.length() + 1));
-            }
-        cont.name=contractName;
-        cont.AccountId = AccountID;
-        cont.Counter_Party_ID__c = AccountID;
-        cont.Counter_Party_Name_lookup__c =AccountID;
-        cont.Huron_Signer__c = accountList[0].Account_Lead__c ;
-        cont.Document_Type__c = DocumentType;
-        cont.CurrencyIsoCode =accountList[0].CurrencyIsoCode;
-        cont.StartDate = System.Today().addDays(14);
-        cont.ContractTerm = 12;
-        cont.Status='Draft';
-        cont.Disposition__c = 'Draft';
-        cont.Contract_Industry__c = accountList[0].Industry;
-        cont.Contract_Industry_Sub_Market__c = accountList[0].Industry_Sub_Market__c;
-        if(!oppMapList.isEmpty()){
-             cont.Contract_Operating_Industry__c=oppMapList[0].Operating_Industry__c;
-        }   
+            }        cont.name=contractName;
+       
         try
         {
            insert cont;

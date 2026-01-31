@@ -1,10 +1,4 @@
-/******************************************************************************************
-Apex Class         : AccountsContractController
-Created Date       : Aug , 2025
-@Description       : update contract fields with account and opportunity fields
-@Author            : pradeep baddity 
-User Story         : 156879 161439
-********************************************************************************************/
+
 public with sharing class AccountsContractController {
     @AuraEnabled(cacheable=true)
     public static List<Contract> getExistingContracts(Id recordId) {

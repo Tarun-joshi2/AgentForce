@@ -6,7 +6,6 @@ public with sharing class AccountsContractController {
         String sObjName = recordId.getSObjectType().getDescribe().getName();
         List<Contract> contracts = new List<Contract>();
         if (sObjName == 'Account') {
-            contracts = [
                 SELECT Id, Name, Document_Type__c, StartDate, ContractTerm, EndDate,Disposition__c,Assignment_Group__c
                 FROM Contract
                 WHERE AccountId = :recordId

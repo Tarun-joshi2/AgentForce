@@ -72,15 +72,6 @@ public with sharing class AccountsContractController {
         cont.Counter_Party_ID__c = AccountID;
         cont.Counter_Party_Name_lookup__c = AccountID;
         cont.Opportunity__c = OpportunityID;
-        cont.Document_Type__c = DocumentType;
-        cont.Huron_Signer__c = opportunity.MD_of_Record__c;
-        cont.StartDate = opportunity.Estimated_Start_Date__c;
-        cont.ContractTerm = Integer.valueOf(opportunity.Estimated_Duration__c);
-        cont.Contract_amount__c =opportunity.Amount;
-        cont.CurrencyIsoCode =opportunity.CurrencyIsoCode;
-        cont.Status='Draft';
-        cont.Contract_Industry__c = opportunity.Industry__c;
-        //cont.OwnerId = opportunity.OwnerId;
         cont.Huron_Entity__c = opportunity.Huron_Entity__c;
         cont.Disposition__c = 'Draft';
         cont.Contract_Industry_Sub_Market__c = opportunity.Industry_Sub_Market__c; 

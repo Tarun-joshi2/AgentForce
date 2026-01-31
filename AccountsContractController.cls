@@ -48,14 +48,7 @@ public with sharing class AccountsContractController {
         {
            insert cont;
         }
-        catch(Exception e)
-        {
-             insert new Error_Log__c(Apex_Class_Name__c='create_AccountsContractController',Source_System__c='Salesforce' ,Message__c=e.getMessage());
-                   
-        }
-              return cont.id;
-        }
-       
+     
     }
    @AuraEnabled(cacheable=false)
     public static ID createOpportunityContract(Id AccountId,Id OpportunityID,String DocumentType)

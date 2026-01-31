@@ -14,12 +14,7 @@ public with sharing class AccountsContractController {
             ];
         } else if (sObjName == 'Opportunity') {
             contracts = [
-                SELECT Id, Name, Document_Type__c, StartDate, ContractTerm, EndDate, Disposition__c,Assignment_Group__c
-                FROM Contract
-                WHERE Opportunity__c = :recordId
-                AND Document_Type__c IN ('Non-Disclosure Agreement (NDA)', 'Professional Services Agreement (PSA)','Huron Managed Services (HMS) MSA','Engagement Letter (EL)','Statement of Work (SOW)','Software as a Service Agreement (SaaS)','Business Associate Agreement (BAA)','Teaming Agreement','Amendments','Others')
-                AND RecordType.Name IN ('Huron Contract')
-            ];
+                SELECT Id, Name, 
         }
         
         return contracts;

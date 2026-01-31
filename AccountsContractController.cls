@@ -39,8 +39,7 @@ public with sharing class AccountsContractController {
          if (accountList.isEmpty()) {
             throw new AuraHandledException('Account not found.');
         }
-        else
-        {
+     
         string indAndSubInd=accountList[0].Industry+accountList[0].Industry_Sub_Market__c;
         List<Opportunity_Mapping__c> oppMapList=[SELECT Industry__c,Name_Key_Value__c,Industry_Sub_Market__c,
                                              Operating_Industry__c,Operating_Segment__c

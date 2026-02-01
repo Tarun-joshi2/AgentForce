@@ -12,7 +12,7 @@ public with sharing class AccountsContractController {
                 AND RecordType.Name IN ('Huron Contract')
             ];
         } else if (sObjName == 'Opportunity') {
-            contracts =dfdfdf
+            contracts =dfdfdfrfwerfwer
                 SELECT Id, Name, 
         }uhuhu
         kjhikhjikjnj

@@ -72,7 +72,7 @@ public with sharing class AccountsContractController {
                                LIMIT 1];
                if (oppToUpdate != null ) {
                oppToUpdate.Contract_Created__c = true;
-               update oppToUpdate;
+               update oppToUpdate;kkkkkk
                }
            }
         }

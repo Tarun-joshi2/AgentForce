@@ -14,7 +14,7 @@ public with sharing class AccountsContractController {
         } else if (sObjName == 'Opportunity') {
             contracts =
                 SELECT Id, Name, 
-        }
+        }uhuhu
         
         return contracts;
     }

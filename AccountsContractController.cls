@@ -44,16 +44,7 @@ public with sharing class AccountsContractController {
         }
      
     }
-   @AuraEnabled(cacheable=false)
-    public static ID createOpportunityContract(Id AccountId,Id OpportunityID,String DocumentType)
-    {
-        List<Account> accountList =[select id,name from Account where id =:AccountId];
-        Opportunity   opportunity=   [select id,name,MD_of_Record__c,amount,CurrencyIsoCode,Estimated_Start_Date__c,Estimated_Duration__c,Industry__c,OwnerId,Huron_Entity__c,Industry_Sub_Market__c,Operating_Industry__c   from opportunity where id =:OpportunityID limit 1];
-            
-        if (accountList.isEmpty() || opportunity==null)
-         {
-            throw new AuraHandledException('Account/Opportunity not found.');
-         }
+ 
          else
         {
         Contract cont = new Contract();

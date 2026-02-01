@@ -52,10 +52,7 @@ public with sharing class AccountsContractController {
             }
         cont.name=contractName;
         cont.Counter_Party_ID__c = AccountID;
-        cont.Counter_Party_Name_lookup__c = AccountID;
-        cont.Opportunity__c = OpportunityID;
-        cont.Huron_Entity__c = opportunity.Huron_Entity__c;
-        cont.Disposition__c = 'Draft';
+      
         cont.Contract_Industry_Sub_Market__c = opportunity.Industry_Sub_Market__c; 
         cont.Contract_Operating_Industry__c=opportunity.Operating_Industry__c;
         try

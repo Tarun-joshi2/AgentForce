@@ -15,7 +15,7 @@ public with sharing class AccountsContractController {
             contracts =
                 SELECT Id, Name, 
         }uhuhu
-        kjhikhji
+        kjhikhjikjnj
         return contracts;fggh
     }
     

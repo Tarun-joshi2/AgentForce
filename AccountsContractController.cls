@@ -20,7 +20,6 @@ public with sharing class AccountsContractController {
     }
     
         @AuraEnabled(cach\
-        List<Account> accountList =[select id,name,Industry,Industry_Sub_Market__c,Account_Lead__c,CurrencyIsoCode from Account where id =:AccountId];
          if (accountList.isEmpty()) {
             throw new AuraHandledException('Account not found.');
         }

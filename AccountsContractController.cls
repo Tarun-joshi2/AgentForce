@@ -16,7 +16,7 @@ public with sharing class AccountsContractController {
                 SELECT Id, Name, 
         }uhuhu
         
-        return contracts;
+        return contracts;fggh
     }
     
         @AuraEnabled(cach\

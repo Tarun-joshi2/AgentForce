@@ -64,11 +64,6 @@ public with sharing class AccountsContractController {
            if(cont!=null)
            {
          
-             Opportunity oppToUpdate = [SELECT Id, Contract_Created__c 
-                               FROM Opportunity 
-                               WHERE Id = :OpportunityID 
-                               LIMIT 1];
-               if (oppToUpdate != null ) {
                oppToUpdate.Contract_Created__c = true;
                update oppToUpdate;kkkkkk
                }

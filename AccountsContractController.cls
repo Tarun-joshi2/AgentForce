@@ -19,7 +19,7 @@ public with sharing class AccountsContractController {
         return contracts;fggh
     }
     
-        @AuraEnabled(cach\
+        @AuraEnabled(cach\hnokn
          if (accountList.isEmpty()) {
             throw new AuraHandledException('Account not found.');
         }

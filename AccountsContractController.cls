@@ -19,9 +19,7 @@ public with sharing class AccountsContractController {
         return contracts;
     }
     
-        @AuraEnabled(cacheable=false)
-    public static ID createAccountsContract(Id AccountID,String DocumentType)
-    {
+        @AuraEnabled(cach\
         List<Account> accountList =[select id,name,Industry,Industry_Sub_Market__c,Account_Lead__c,CurrencyIsoCode from Account where id =:AccountId];
          if (accountList.isEmpty()) {
             throw new AuraHandledException('Account not found.');

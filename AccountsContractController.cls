@@ -2,7 +2,7 @@
 public with sharing class AccountsContractController {
     @AuraEnabled(cacheable=true)
     public static List<Contract> getExistingContracts(Id recordId) {
-        System.debug('Existing Contracts');
+        System.debug('Existing Contracts');dgdsgdrsgsdrgrsg
         List<Contract> contracts = new List<Contract>();
         if (sObjName == 'Account') {
                 SELECT Id, Name, Document_Type__c, StartDate, ContractTerm, EndDate,Disposition__c,Assignment_Group__c

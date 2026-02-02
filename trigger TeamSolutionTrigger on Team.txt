@@ -1,0 +1,63 @@
+trigger TeamSolutionTrigger on Team_Solution__c (before insert, after insert, before update, after update,after delete) {
+     if( Trigger.isInsert){
+            if(Trigger.isAfter) 
+            {
+                TeamSolutionTriggerHandler.OnAfterInsert(trigger.New); 
+            }
+            else {
+            }
+          }
+          if( Trigger.isUpdate){
+            if(Trigger.isAfter) 
+            {
+                TeamSolutionTriggerHandler.OnAfterUpdate(trigger.New); 
+            }
+            else {
+            }
+            }
+}
+
+
+
+/**
+ * ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+ * Class Name      : TeamSolutionTriggerHandler
+ * Author          : A Bharathi
+ * Created Date    : Jan 7, 2026
+ * Last Modified By: A Bharathi
+ * Last Modified On: Jan 7, 2026
+ * Description     : 
+ *  */
+
+public class TeamSolutionTriggerHandler {
+
+	public static void OnAfterInsert(List<Team_Solution__c> teamsol) {
+		// Your logic here
+	}
+	public static void OnAfterUpdate(List<Team_Solution__c> teamsol) {
+		Set<Id> oppIds = new Set<Id>();
+		List<opportunity> OppstoUpdate = new List<opportunity>();
+		for (Team_Solution__c ts : teamsol) {
+			if (ts.Opportunity__c != null) {
+				oppIds.add(ts.Opportunity__c);
+			}
+    	}
+		if(!oppIds.isEmpty()){
+			 Map<Id, Opportunity> oppMap = new Map<Id, Opportunity>(
+				[SELECT Id, isSubCapHunPer__c
+				FROM Opportunity
+				WHERE Id IN :oppIds]);
+				for (Team_Solution__c ts : teamsol) {
+				if (ts.Opportunity__c != null && oppMap.containsKey(ts.Opportunity__c)) {
+					Opportunity opp = oppMap.get(ts.Opportunity__c);
+
+					// Example update logic
+					opp.isSubCapHunPer__c = true;
+					OppstoUpdate.add(opp);
+				}
+			}
+			if(OppstoUpdate.size()>0) Update OppstoUpdate;
+		}
+	}
+
+}

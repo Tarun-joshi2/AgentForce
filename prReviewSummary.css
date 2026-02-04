@@ -1,0 +1,25 @@
+.card {
+    border: 1px solid #d8dde6;
+    border-radius: 6px;
+    padding: 16px;
+    background: #ffffff;
+}
+
+.title {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.approved {
+    color: green;
+    font-weight: bold;
+}
+
+.review {
+    color: #c23934;
+    font-weight: bold;
+}
+
+.summary {
+    margin-top: 10px;
+}
